@@ -9,7 +9,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator animator;
 
     [Header("Movement")]
-    [SerializeField] private float walkSpeed = 6f;
+    [SerializeField] private float walkSpeed = 4f;
+    [SerializeField] private float RunSpeed = 10f;
     [SerializeField] private float jumpForce = 2f;
 
     [Header("Detección de Suelo")]
@@ -31,29 +32,65 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        
+       
         if (Input.GetMouseButtonDown(0))
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
 
         isGrounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, rayDistance);
+        animator.SetBool("Grounded", isGrounded);
 
-        
+
+   
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+        cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        transform.Rotate(Vector3.up * mouseX);
+
+
+     
+       
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
-
-        Vector3 moveDirection = transform.right * x + transform.forward * z;
-        rb.linearVelocity = new Vector3(moveDirection.x * walkSpeed, rb.linearVelocity.y, moveDirection.z * walkSpeed);
+        bool isSprinting = Input.GetKey(KeyCode.LeftShift);
 
         
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            isSprinting = false;
+        }
+
+       
+        float currentSpeed;
+        if (isSprinting == true)
+        {
+            currentSpeed = RunSpeed;
+        }
+        else
+        {
+            currentSpeed = walkSpeed;
+        }
+
+        
+        Vector3 moveDirection = transform.right * x + transform.forward * z;
+        rb.linearVelocity = new Vector3(moveDirection.x * currentSpeed, rb.linearVelocity.y, moveDirection.z * currentSpeed);
+
+        animator.SetBool("isSprinting", isSprinting);
+        animator.SetFloat("InputX", x);
+        animator.SetFloat("InputY", z);
+
+
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
 
-        //Crouch
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             cameraTransform.localPosition = new Vector3(cameraTransform.localPosition.x, crouchHeight, cameraTransform.localPosition.z);
@@ -64,18 +101,6 @@ public class PlayerController : MonoBehaviour
             cameraTransform.localPosition = new Vector3(cameraTransform.localPosition.x, standHeight, cameraTransform.localPosition.z);
             animator.SetBool("isCrouching", false);
         }
-
-       
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
-
-       
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f); 
-
-        cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-
-        transform.Rotate(Vector3.up * mouseX);
     }
 }
 
