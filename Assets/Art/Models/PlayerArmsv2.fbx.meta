@@ -1,9 +1,14 @@
 fileFormatVersion: 2
-guid: f2cc864fa9163094caca5e08a077cb77
+guid: 6e00eb2c5457f0f4b87f3ab58588e025
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Alpha_Body_MAT.001
+    second: {fileID: 2100000, guid: 287a8a31e16934143a4887221c4bcae9, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

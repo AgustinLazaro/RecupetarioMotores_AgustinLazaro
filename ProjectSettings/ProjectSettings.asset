@@ -848,8 +848,8 @@ PlayerSettings:
   editorAssembliesCompatibilityLevel: 1
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: RecupetarioMotores_AgustinLazaro
-  metroPackageVersion: 
+  metroPackageName: RecupetarioMotoresAgustinLazaro
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -857,7 +857,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: RecupetarioMotores_AgustinLazaro
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: RecupetarioMotores_AgustinLazaro
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
@@ -924,7 +924,7 @@ PlayerSettings:
   qnxGraphicConfPath: 
   apiCompatibilityLevel: 6
   captureStartupLogs: {}
-  activeInputHandler: 1
+  activeInputHandler: 2
   windowsGamepadBackendHint: 0
   cloudProjectId: 5c848ab6-2573-459a-8d00-f5dcb49d3c44
   framebufferDepthMemorylessMode: 0
