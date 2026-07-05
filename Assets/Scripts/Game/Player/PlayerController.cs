@@ -77,8 +77,11 @@ public class PlayerController : MonoBehaviour
         }
 
         
-        Vector3 moveDirection = transform.right * x + transform.forward * z;
-        rb.linearVelocity = new Vector3(moveDirection.x * currentSpeed, rb.linearVelocity.y, moveDirection.z * currentSpeed);
+        Vector3 moveDirection =
+            transform.right * x + transform.forward * z;
+
+        rb.linearVelocity = 
+            new Vector3(moveDirection.x * currentSpeed, rb.linearVelocity.y, moveDirection.z * currentSpeed);
 
         animator.SetBool("isSprinting", isSprinting);
         animator.SetFloat("InputX", x);
@@ -87,18 +90,24 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            rb.linearVelocity =
+                new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            cameraTransform.localPosition = new Vector3(cameraTransform.localPosition.x, crouchHeight, cameraTransform.localPosition.z);
+            cameraTransform.localPosition =
+                new Vector3(cameraTransform.localPosition.x, crouchHeight, cameraTransform.localPosition.z);
+
             animator.SetBool("isCrouching", true);
         }
         else if (Input.GetKeyUp(KeyCode.LeftControl))
         {
-            cameraTransform.localPosition = new Vector3(cameraTransform.localPosition.x, standHeight, cameraTransform.localPosition.z);
+            cameraTransform.localPosition =
+                new Vector3(cameraTransform.localPosition.x, standHeight, cameraTransform.localPosition.z);
+
             animator.SetBool("isCrouching", false);
         }
     }
