@@ -1,4 +1,4 @@
-using System;
+
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement; 
@@ -20,11 +20,14 @@ public class SplashScreen : MonoBehaviour
     }
 
      void Update()
-    {
+    {  
+        //tempo
         if (timer > 0)
         {
            timer -= Time.deltaTime; 
         }
+
+        //fade out
         else
         {
             Color colorLogo = imageLogo.color;
@@ -37,7 +40,5 @@ public class SplashScreen : MonoBehaviour
                 SceneManager.LoadScene(sceneMenu);
             }
         }
-
-        
     }
 }

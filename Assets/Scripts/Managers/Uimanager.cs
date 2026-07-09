@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.Audio;
 
 
 public class Uimanager : MonoBehaviour
@@ -35,10 +34,6 @@ public class Uimanager : MonoBehaviour
     [SerializeField] private Button btnBackAutor;
     [SerializeField] private Button btnBackAudio;
 
-
-
-
-
     private void Start()
     {
         btnPlay.onClick.AddListener(LoadGame);
@@ -58,36 +53,30 @@ public class Uimanager : MonoBehaviour
         btnCredits.onClick.AddListener(classAudioManager.PlayClick);
         btnAutor.onClick.AddListener(classAudioManager.PlayClick);
         btnAudio.onClick.AddListener(classAudioManager.PlayClick);
-
         btnBackOptions.onClick.AddListener(classAudioManager.PlayClick);
         btnBackCredits.onClick.AddListener(classAudioManager.PlayClick);
         btnBackAutor.onClick.AddListener(classAudioManager.PlayClick);
         btnBackAudio.onClick.AddListener(classAudioManager.PlayClick);
-        //sliders
         // Conexión de Sliders al AudioManager
         SliderMaster.onValueChanged.AddListener(classAudioManager.SetMasterVolume);
         SliderMusic.onValueChanged.AddListener(classAudioManager.SetMusicVolume);
         SliderSFX.onValueChanged.AddListener(classAudioManager.SetSFXVolume);
 
     }
-
     private void LoadGame()
     {
         SceneManager.LoadScene("Scene02");
     }
-
 
     private void Panel(GameObject OpenPanel)
     {
         OpenPanel.SetActive(true);
     }
 
-
     private void Back(GameObject ClosePanel)
     {
         ClosePanel.SetActive(false);
     }
-
 }
 
 

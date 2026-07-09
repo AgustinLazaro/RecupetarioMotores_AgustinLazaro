@@ -15,18 +15,25 @@ public class AudioManager : MonoBehaviour
         sfxSource.Play();
     }
 
+
+    // convertor a decibelios 
     public void SetMasterVolume(float sliderValue)
     {
-        mainMixer.SetFloat("MASTERvol", Mathf.Log10(sliderValue) * 20f);
+        mainMixer.SetFloat("MASTERvol", LogConversion(sliderValue));
     }
 
     public void SetMusicVolume(float sliderValue)
     {
-        mainMixer.SetFloat("MUSICvol", Mathf.Log10(sliderValue) * 20f);
+        mainMixer.SetFloat("MUSICvol", LogConversion(sliderValue));
     }
 
     public void SetSFXVolume(float sliderValue)
     {
-        mainMixer.SetFloat("SFXvol", Mathf.Log10(sliderValue) * 20f);
+        mainMixer.SetFloat("SFXvol", LogConversion(sliderValue));
+    }
+
+    private static float LogConversion(float sliderValue)
+    {
+        return Mathf.Log10(sliderValue) * 20f;
     }
 }

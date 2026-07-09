@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class WeaponController : MonoBehaviour
 {
@@ -26,17 +25,15 @@ public class WeaponController : MonoBehaviour
     [SerializeField] private float recoilTime = 1f;
     [SerializeField] private float recoilSpeed = 20f;
 
-
-
     void Start()
     {
         
     }
-
-
     void Update()
     {
-        
+
+
+        //aim
         if (Input.GetMouseButton(1))
         {
             transform.localPosition = Vector3.Lerp(transform.localPosition, positionAim, Time.deltaTime * speedAim);
@@ -46,16 +43,28 @@ public class WeaponController : MonoBehaviour
             transform.localPosition = Vector3.Lerp(transform.localPosition, position, Time.deltaTime * speedAim);
         }
 
-    
+
+
+        //Shoot y raycast para visibilizarlo 
         if (Input.GetMouseButtonDown(0))
         {
             recoilTime = 1f;
 
+            Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 
             RaycastHit hit;
             if (Physics.Raycast(firePoint.position, firePoint.forward, out hit, range))
             {
-                Debug.Log("Pegaste a : " + hit.transform.name);
+                Debug.Log("Pegaste a esto: " + hit.transform.name);
+
+
+                //busco EnemyController y le resto 25 de vida
+                EnemyController enemyShocked = hit.transform.GetComponentInParent<EnemyController>();
+                if (enemyShocked != null)
+                {
+                    enemyShocked.TakeDamage(25f); 
+                }
+
 
                 Debug.DrawRay(firePoint.position, firePoint.forward * hit.distance, Color.red, 2f);
 
@@ -65,18 +74,8 @@ public class WeaponController : MonoBehaviour
             }
         }
 
-      
-        if (hitmarkerTimer > 0)
-        {
-            hitmarkerTimer -= Time.deltaTime;
-            if (hitmarkerTimer <= 0)
-            {
-                
-                hitmarkerImage.SetActive(false);
-            }
-        }
 
-        
+        //recoil
         if (recoilTime > 0f)
         {
             Quaternion targetRetroceso = Quaternion.Euler(recoilRotation);
@@ -88,6 +87,18 @@ public class WeaponController : MonoBehaviour
         {
             Quaternion targetNormal = Quaternion.Euler(rotation);
             transform.localRotation = Quaternion.Slerp(transform.localRotation, targetNormal, Time.deltaTime * returnSpeed);
+        }
+
+
+        //temp de hitmarker
+        if (hitmarkerTimer > 0)
+        {
+            hitmarkerTimer -= Time.deltaTime;
+            if (hitmarkerTimer <= 0)
+            {
+                
+                hitmarkerImage.SetActive(false);
+            }
         }
     }
 }
