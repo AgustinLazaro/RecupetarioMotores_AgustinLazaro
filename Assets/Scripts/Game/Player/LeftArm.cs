@@ -12,8 +12,6 @@ public class LeftArm : MonoBehaviour
     {
         
     }
-
-    
     void Update()
     {
         
@@ -22,7 +20,6 @@ public class LeftArm : MonoBehaviour
             isArmUp = !isArmUp;
         }
 
-       
         if (isArmUp)
         {
             

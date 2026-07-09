@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 public class PlayerController : MonoBehaviour
 {
     [Header("Referencias")]
@@ -23,26 +22,22 @@ public class PlayerController : MonoBehaviour
 
     [Header("Camera Look")]
     [SerializeField] private float mouseSensitivity = 2f;
-    private float xRotation = 0f; 
+    private float xRotation = 0f;
 
     void Start()
     {
-        
-    }
 
+    }
     void Update()
     {
-       
+        //cursor
         if (Input.GetMouseButtonDown(0))
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
 
-        isGrounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, rayDistance);
-        animator.SetBool("Grounded", isGrounded);
 
-
-   
+        //camara cuello/cuerpos
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
@@ -53,41 +48,12 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(Vector3.up * mouseX);
 
 
-     
-       
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-        bool isSprinting = Input.GetKey(KeyCode.LeftShift);
-
-        
-        if (Input.GetKey(KeyCode.LeftControl))
-        {
-            isSprinting = false;
-        }
-
-       
-        float currentSpeed;
-        if (isSprinting == true)
-        {
-            currentSpeed = RunSpeed;
-        }
-        else
-        {
-            currentSpeed = walkSpeed;
-        }
-
-        
-        Vector3 moveDirection =
-            transform.right * x + transform.forward * z;
-
-        rb.linearVelocity = 
-            new Vector3(moveDirection.x * currentSpeed, rb.linearVelocity.y, moveDirection.z * currentSpeed);
-
-        animator.SetBool("isSprinting", isSprinting);
-        animator.SetFloat("InputX", x);
-        animator.SetFloat("InputY", z);
+        //Detecccion de suelo 
+        isGrounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, rayDistance);
+        animator.SetBool("Grounded", isGrounded);
 
 
+        //Salto
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             rb.linearVelocity =
@@ -96,6 +62,9 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
 
+
+
+        //agacharse
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             cameraTransform.localPosition =
@@ -110,6 +79,39 @@ public class PlayerController : MonoBehaviour
 
             animator.SetBool("isCrouching", false);
         }
+
+
+        //wasd y sprint
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+        bool isSprinting = Input.GetKey(KeyCode.LeftShift);
+
+
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            isSprinting = false;
+        }
+        float currentSpeed;
+        if (isSprinting == true)
+        {
+            currentSpeed = RunSpeed;
+        }
+        else
+        {
+            currentSpeed = walkSpeed;
+        }
+
+
+        //movimineto fisico 
+        Vector3 moveDirection =
+            transform.right * x + transform.forward * z;
+
+        rb.linearVelocity =
+            new Vector3(moveDirection.x * currentSpeed, rb.linearVelocity.y, moveDirection.z * currentSpeed);
+
+        animator.SetBool("isSprinting", isSprinting);
+        animator.SetFloat("InputX", x);
+        animator.SetFloat("InputY", z);
     }
 }
 
