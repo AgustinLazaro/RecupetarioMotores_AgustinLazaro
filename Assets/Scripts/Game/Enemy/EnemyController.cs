@@ -29,10 +29,7 @@ public class EnemyController : MonoBehaviour
         currentHealth = maxHealth;
         updateHeatlbar();
     }
-    void Update()
-    {
-       
-    }
+
     private void OnTriggerStay(Collider other)
     {
         if (other.transform.root == playerTarget.root)

@@ -1,117 +1,98 @@
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Character
 {
-    [Header("Referencias")]
-    [SerializeField] Transform cameraTransform;
-    [SerializeField] private Rigidbody rb;
-    [SerializeField] private Animator animator;
+    [Header("Cosas únicas del Player")]
+    [SerializeField] private Transform cameraTransform;
 
-    [Header("Movement")]
-    [SerializeField] private float walkSpeed = 4f;
-    [SerializeField] private float RunSpeed = 10f;
-    [SerializeField] private float jumpForce = 2f;
-
-    [Header("Detección de Suelo")]
-    [SerializeField] private float rayDistance = 1f;
-    [SerializeField] private bool isGrounded;
-
-    [Header("Crouched")]
-    [SerializeField] private float standHeight = 2f;
-    [SerializeField] private float crouchHeight = 1f;
-
-    [Header("Camera Look")]
+    [Header("Ajustes de Cámara")]
     [SerializeField] private float mouseSensitivity = 2f;
     private float xRotation = 0f;
 
-    void Start()
-    {
+    [Header("Keys")]
+    [SerializeField] private KeyCode crouchKey = KeyCode.LeftControl;
+    [SerializeField] private KeyCode sprintKey = KeyCode.LeftShift;
 
-    }
+    [Header("Input Strings")]
+    private const string AXIS_HORIZONTAL = "Horizontal";
+    private const string AXIS_VERTICAL = "Vertical";
+    private const string BUTTON_JUMP = "Jump";
+    private const string MOUSE_X = "Mouse X";
+    private const string MOUSE_Y = "Mouse Y";
+
     void Update()
     {
-        //cursor
+        HideCursor();
+        ManageCamera();
+        CheckGroundStatus(); // Heredado
+        ManageJump();
+        ManageCrouch();
+        ManageMovement();
+
+    }
+
+
+    private void HideCursor()
+    {
         if (Input.GetMouseButtonDown(0))
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
+    }
 
-
-        //camara cuello/cuerpos
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+    private void ManageCamera()
+    {
+        float mouseX = Input.GetAxis(MOUSE_X) * mouseSensitivity;
+        float mouseY = Input.GetAxis(MOUSE_Y) * mouseSensitivity;
 
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
+    }
 
 
-        //Detecccion de suelo 
-        isGrounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, rayDistance);
-        animator.SetBool("Grounded", isGrounded);
-
-
-        //Salto
-        if (Input.GetButtonDown("Jump") && isGrounded)
+    private void ManageJump()
+    {
+        if (Input.GetButtonDown(BUTTON_JUMP) && isGrounded)
         {
-            rb.linearVelocity =
-                new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            ExecuteJump(MyStats.jumpForce);
         }
+    }
 
-
-
-        //agacharse
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+    private void ManageCrouch()
+    {
+        
+        if (Input.GetKeyDown(crouchKey) || Input.GetKeyUp(crouchKey)) //OR
         {
-            cameraTransform.localPosition =
-                new Vector3(cameraTransform.localPosition.x, crouchHeight, cameraTransform.localPosition.z);
+            bool isCrouching = Input.GetKey(crouchKey);
 
-            animator.SetBool("isCrouching", true);
+            float targetHeight = isCrouching ? MyStats.crouchHeight : MyStats.standHeight;//tenario
+
+            cameraTransform.localPosition = new Vector3(cameraTransform.localPosition.x, targetHeight, cameraTransform.localPosition.z);
+            ExecuteCrouch(isCrouching);
         }
-        else if (Input.GetKeyUp(KeyCode.LeftControl))
-        {
-            cameraTransform.localPosition =
-                new Vector3(cameraTransform.localPosition.x, standHeight, cameraTransform.localPosition.z);
+    }
 
-            animator.SetBool("isCrouching", false);
-        }
+    private void ManageMovement()
+    {
+        float x = Input.GetAxis(AXIS_HORIZONTAL);
+        float z = Input.GetAxis(AXIS_VERTICAL);
 
+        //Remplazo de variables de controles en vez hardcodeo de tecla 
+        bool isSprinting = Input.GetKey(sprintKey);
 
-        //wasd y sprint
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-        bool isSprinting = Input.GetKey(KeyCode.LeftShift);
-
-
-        if (Input.GetKey(KeyCode.LeftControl))
+        if (Input.GetKey(crouchKey))
         {
             isSprinting = false;
         }
-        float currentSpeed;
-        if (isSprinting == true)
-        {
-            currentSpeed = RunSpeed;
-        }
-        else
-        {
-            currentSpeed = walkSpeed;
-        }
 
+        float currentSpeed = isSprinting ? MyStats.runSpeed : MyStats.walkSpeed;//Ternario
 
-        //movimineto fisico 
-        Vector3 moveDirection =
-            transform.right * x + transform.forward * z;
-
-        rb.linearVelocity =
-            new Vector3(moveDirection.x * currentSpeed, rb.linearVelocity.y, moveDirection.z * currentSpeed);
-
-        animator.SetBool("isSprinting", isSprinting);
-        animator.SetFloat("InputX", x);
-        animator.SetFloat("InputY", z);
+        //movimineto fisico heredada de character
+        Vector3 moveDirection = transform.right * x + transform.forward * z;
+        ExecuteMovement(moveDirection, currentSpeed, isSprinting, x, z);
     }
 }
 
