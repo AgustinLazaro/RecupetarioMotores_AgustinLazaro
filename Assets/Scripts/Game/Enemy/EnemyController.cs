@@ -1,139 +1,101 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class EnemyController : MonoBehaviour
+public class EnemyController : Character
 {
     [Header("Referencias")]
     [SerializeField] private Transform playerTarget;
     [SerializeField] private Transform enemyEyes;
-    [SerializeField] private Animator animator;
-
-    [Header("Visión ")]
-    [SerializeField] private float viewDistance = 20f;
-
-    [Header("Movimiento & Rotación")]
-    [SerializeField] private float rotationSpeed = 5f;
-
+    [SerializeField] private Image healthBarFill;
 
     [Header("Estados")]
-    [SerializeField] private bool WatchingPlayer;
+    [SerializeField] private EnemyState currentState = EnemyState.Idle;
 
-    [Header("Salud y UI")]
-    [SerializeField] private float maxHealth = 100f;
-    private float currentHealth;
-    [SerializeField] private Image healthBarFill; 
+    protected override void Start()
+    {
+        base.Start();
+        UpdateHealthBar();
+    }
+    private void Update()
+    {
+        switch (currentState)
+        {
+            case EnemyState.Chase:
+                FaceTarget();
+                break;
+            case EnemyState.Idle:
+                break;
+        }
+    }
 
-    void Start()
-    {
-        currentHealth = maxHealth;
-        updateHeatlbar();
-    }
-    void Update()
-    {
-       
-    }
+    // Inputs
     private void OnTriggerStay(Collider other)
     {
-        if (other.transform.root == playerTarget.root)
+        if (IsPlayer(other))
         {
-            CheckLineOfSight();
+            //ternario: Lo veo? Chase. No lo veo? Idle.
+            currentState = CanSeePlayer() ? EnemyState.Chase : EnemyState.Idle;
         }
     }
-
     private void OnTriggerExit(Collider other)
     {
-        if (other.transform.root == playerTarget.root)
+        if (IsPlayer(other))
         {
-            WatchingPlayer = false;
+            currentState = EnemyState.Idle;
         }
-
     }
 
-    private void CheckLineOfSight()
+    private bool IsPlayer(Collider other)
     {
-        // data de raycast
+        return other.transform.root == playerTarget.root;
+    }
+
+    //vision 
+    private bool CanSeePlayer()
+    {
         Vector3 rayOrigin = enemyEyes.position;
-        Vector3 rayTarget = playerTarget.position;
-        Vector3 directionToPlayer = (rayTarget - rayOrigin).normalized;
+        Vector3 directionToPlayer = (playerTarget.position - rayOrigin).normalized;
 
-        RaycastHit hit;
-
-        //Deteccion rayo
-        if (Physics.Raycast(rayOrigin, directionToPlayer, out hit, viewDistance))
+        if (Physics.Raycast(rayOrigin, directionToPlayer, out RaycastHit hit, MyStats.viewDistance))
         {
-            if (hit.transform.root == playerTarget.root)
-
+            if (IsPlayer(hit.collider)) // DRY aplicado
             {
-                //Mira al player y rota con slerp
-                WatchingPlayer = true;
-
                 Debug.DrawRay(rayOrigin, directionToPlayer * hit.distance, Color.green);
-
-                
-                Vector3 lookPosition = new Vector3(playerTarget.position.x, transform.position.y, playerTarget.position.z);
-
-                
-                Vector3 lookDirection = (lookPosition - transform.position).normalized;
-
-                
-                Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-
-                
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            }
-            else
-            //cobertura
-            {
-                WatchingPlayer = false;
-                Debug.DrawRay(rayOrigin, directionToPlayer * hit.distance, Color.red);
+                return true;
             }
         }
-        else
-        //fuera de rango
-        {
-            WatchingPlayer = false;
-            Debug.DrawRay(rayOrigin, directionToPlayer * viewDistance, Color.red);
-        }
+
+        Debug.DrawRay(rayOrigin, directionToPlayer * MyStats.viewDistance, Color.red);
+        return false;
     }
 
-
-    //Recibe daño
-    public void TakeDamage(float damageAmount)
+    // acciones
+    private void FaceTarget()
     {
-        currentHealth -= damageAmount;
+        // 1. calculo direccion
+        Vector3 direction = playerTarget.position - transform.position;
+
+        // 2. Anulo eje Y
+        direction.y = 0;
+
+        // 3. Rotacion
+        Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, MyStats.rotationSpeed * Time.deltaTime);
+    }
+
+    // health system
+    public override void TakeDamage(float damageAmount)
+    {
+        base.TakeDamage(damageAmount);
+        UpdateHealthBar();
+    }
+
+    protected override void Die()
+    {
         
-        //la vida no baja de 0
-        if (currentHealth < 0)
-        {
-            currentHealth = 0;
-        }
-        updateHeatlbar();
-
-
-        // Lógica de muerte
-       // if (currentHealth <= 0)
-        //{
-       //     Die();
-        //}
-    }
-
-
-    //Se actualiza la UI barra de vida u
-    private void updateHeatlbar()
-    {
-        if (healthBarFill != null)
-        {
-
-            healthBarFill.fillAmount = currentHealth / maxHealth;
-        }
-    }
-
-
-    //Enemigo muere
-    private void Die()
-    {
         Destroy(gameObject);
     }
+    private void UpdateHealthBar()
+    {
+        healthBarFill.fillAmount = currentHealth / MyStats.maxHealth;
+    }
 }
-

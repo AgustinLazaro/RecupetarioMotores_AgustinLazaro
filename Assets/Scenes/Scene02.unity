@@ -2026,9 +2026,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2fdecd54129eee64eac3997980df815b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1539671571}
-    - targetCorrespondingSourceObject: {fileID: 2715566404302941441, guid: 2fdecd54129eee64eac3997980df815b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1491498150}
   m_SourcePrefab: {fileID: 100100000, guid: 2fdecd54129eee64eac3997980df815b, type: 3}
 --- !u!1001 &1370390914
 PrefabInstance:
@@ -2101,33 +2098,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1852576806548013000, guid: 2fdecd54129eee64eac3997980df815b, type: 3}
   m_PrefabInstance: {fileID: 1226296983}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1453311576 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 452405802073606, guid: 43f1866d942502744bd0f0b21a9fde80, type: 3}
-  m_PrefabInstance: {fileID: 1370390914}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1491498149 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2715566404302941441, guid: 2fdecd54129eee64eac3997980df815b, type: 3}
-  m_PrefabInstance: {fileID: 1226296983}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1491498150
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1491498149}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c420a3f9e93e1b648a41cfe6647f79fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyWeapon
-  enemyBulletPrefab: {fileID: 5740795210989267648, guid: c52d8ad21249bb0449d765d115b2b26b, type: 3}
-  firePoint: {fileID: 1453311576}
-  damageAmount: 20
-  fireRate: 1.5
-  nextTimeToFire: 0
 --- !u!1 &1539671566 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 2fdecd54129eee64eac3997980df815b, type: 3}
@@ -2217,14 +2187,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3b762e7752001e4cb73c22e90ae66c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  MyStats: {fileID: 11400000, guid: 94261721a8f09fd4eb4e3cc693bb43e3, type: 2}
+  rb: {fileID: 1539671569}
+  animator: {fileID: 1539671568}
+  rayDistance: 1.2
   playerTarget: {fileID: 2012612710}
   enemyEyes: {fileID: 2021948670}
-  animator: {fileID: 1539671568}
-  viewDistance: 20
-  rotationSpeed: 5
-  WatchingPlayer: 0
-  maxHealth: 100
   healthBarFill: {fileID: 1857195062}
+  currentState: 0
 --- !u!135 &1539671572
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3704,20 +3674,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93eec738366e65a45939a64afb5a7bc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  cameraTransform: {fileID: 2012612710}
+  MyStats: {fileID: 11400000, guid: 94261721a8f09fd4eb4e3cc693bb43e3, type: 2}
   rb: {fileID: 919132148690689126}
   animator: {fileID: 919132148690689124}
-  walkSpeed: 4
-  RunSpeed: 10
-  jumpForce: 6
   rayDistance: 1.2
-  isGrounded: 0
-  standHeight: 1
-  crouchHeight: 0
+  cameraTransform: {fileID: 2012612710}
   mouseSensitivity: 2
-  maxHealth: 100
-  currentHealth: 0
-  healthBarFill: {fileID: 2008410892}
+  crouchKey: 306
+  sprintKey: 304
 --- !u!95 &919132148690689124
 Animator:
   serializedVersion: 7
