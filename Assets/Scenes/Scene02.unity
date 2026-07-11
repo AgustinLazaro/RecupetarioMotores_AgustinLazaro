@@ -2187,14 +2187,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3b762e7752001e4cb73c22e90ae66c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  MyStats: {fileID: 11400000, guid: 94261721a8f09fd4eb4e3cc693bb43e3, type: 2}
+  rb: {fileID: 1539671569}
+  animator: {fileID: 1539671568}
+  rayDistance: 1.2
   playerTarget: {fileID: 2012612710}
   enemyEyes: {fileID: 2021948670}
-  animator: {fileID: 1539671568}
-  viewDistance: 20
-  rotationSpeed: 5
-  WatchingPlayer: 0
-  maxHealth: 100
   healthBarFill: {fileID: 1857195062}
+  currentState: 0
 --- !u!135 &1539671572
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3675,12 +3675,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   MyStats: {fileID: 11400000, guid: 94261721a8f09fd4eb4e3cc693bb43e3, type: 2}
-  cameraTransform: {fileID: 2012612710}
   rb: {fileID: 919132148690689126}
   animator: {fileID: 919132148690689124}
   rayDistance: 1.2
-  isGrounded: 0
+  cameraTransform: {fileID: 2012612710}
   mouseSensitivity: 2
+  crouchKey: 306
+  sprintKey: 304
 --- !u!95 &919132148690689124
 Animator:
   serializedVersion: 7

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d22542a52406cc44963b18ab11950c5, type: 3}
-  m_Name: Stats_Player
+  m_Name: Stats_Characters
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
   maxHealth: 100
   walkSpeed: 4

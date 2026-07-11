@@ -14,4 +14,8 @@ public class CharacterStats : ScriptableObject
     [Header("Crouched")]
     public float standHeight = 2f;
     public float crouchHeight = 1f;
+
+    [Header("Enemy sense)")]
+    public float viewDistance = 20f;
+    public float rotationSpeed = 5f;
 }

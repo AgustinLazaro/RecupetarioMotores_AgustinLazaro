@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class Character : MonoBehaviour
 {
     [Header("Base data (Heredados)")]
@@ -12,6 +11,12 @@ public class Character : MonoBehaviour
     [Header("Deteccion piso (Heredadas")]
     [SerializeField] protected float rayDistance = 1.2f;
     protected bool isGrounded;
+    protected float currentHealth;
+
+    protected virtual void Start()
+    {
+        currentHealth = MyStats.maxHealth;
+    }
 
     //movimineto fisico
     protected void ExecuteMovement(Vector3 direction, float speed, bool run, float inputX, float inputZ)
@@ -46,4 +51,19 @@ public class Character : MonoBehaviour
         animator.SetBool("isCrouching", isCrouching);
     }
 
+    public virtual void TakeDamage(float damageAmount)
+    {
+        currentHealth -= damageAmount;
+
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            Die();
+        }
+        
+    }
+    protected virtual void Die()
+    {
+
+    }
 }
