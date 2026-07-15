@@ -19,7 +19,7 @@ public class HitmarkerUI : MonoBehaviour
         HandleTimer();
     }
 
-    //Prendo hit market y arranca el reloj
+    //Prendo hit market y arranca 
     private void ActivateHitmarker()
     {
         hitmarkerImage.SetActive(true);
