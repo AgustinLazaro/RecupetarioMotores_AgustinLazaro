@@ -2,35 +2,51 @@ using UnityEngine;
 
 public class LeftArm : MonoBehaviour
 {
-    [SerializeField] private Vector3 StartRotation; 
-    [SerializeField] private Vector3 UpRotation; 
-    [SerializeField] private float speed = 5f;     
+    #region Variables
+    [Header("Configuración")]
+    [SerializeField] private Vector3 startRotation;
+    [SerializeField] private Vector3 upRotation;
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private KeyCode actionKey = KeyCode.Q;
 
+    [Header("control")]
+    [SerializeField] private bool isPlayerControlled = true;
+    [SerializeField] private bool isArmUp = false;
+    #endregion
 
-    [SerializeField] private bool isArmUp = false; 
-    void Start()
+    #region Ciclos de Vida
+    private void Update()
     {
-        
+        if (isPlayerControlled)
+        {
+            InputControl();
+        }
+        HandleRotation();
     }
-    void Update()
+    #endregion
+
+    #region Input 
+
+    private void InputControl()
     {
-        
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(actionKey))
         {
             isArmUp = !isArmUp;
         }
-
-        if (isArmUp)
-        {
-            
-            Quaternion targetRotation = Quaternion.Euler(UpRotation);
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, Time.deltaTime * speed);
-        }
-        else
-        {
-            
-            Quaternion targetRotation = Quaternion.Euler(StartRotation);
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, Time.deltaTime * speed);
-        }
     }
+
+    #endregion
+
+    #region Lógica Movimiento
+    private void HandleRotation()
+    {
+        Quaternion targetRotation = isArmUp ? Quaternion.Euler(upRotation) : Quaternion.Euler(startRotation);
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, Time.deltaTime * speed);
+    }
+
+    public void ActivateAction()
+    {
+        isArmUp = true;
+    }
+    #endregion
 }
