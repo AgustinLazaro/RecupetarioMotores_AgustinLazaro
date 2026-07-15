@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Collider))]
 public class EnemyController : Character
 {
     [Header("Referencias")]
@@ -80,9 +81,11 @@ public class EnemyController : Character
     private void StateAiming()
     {
         FaceTarget();
-        if (Vector3.Distance(transform.position, playerTarget.position) > detectionRange)
+
+        if (Vector3.Distance(transform.position, playerTarget.position) > detectionRange || !CanSeePlayer())
         {
             currentState = EnemyState.Tracking;
+            aimingTimer = 0f;
             return;
         }
 
@@ -115,7 +118,7 @@ public class EnemyController : Character
         if (Time.time >= nextAttackTime)
         {
             Vector3 shootDirection = (playerTarget.position - enemyFirePoint.position).normalized;
-            GameObject visualBullet = PoolManager.Instance.GetEnemyBullet();
+            GameObject visualBullet = GameManager.Instance.GetEnemyBullet();
             visualBullet.transform.position = enemyFirePoint.position;
             visualBullet.transform.rotation = Quaternion.LookRotation(shootDirection);
 

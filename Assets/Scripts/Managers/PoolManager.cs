@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoolManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    public static PoolManager Instance { get; private set; }
+    public static GameManager Instance { get; private set; }
 
     [Header("Pool del Jugador")]
     [SerializeField] private GameObject playerBulletPrefab;

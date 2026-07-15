@@ -1,5 +1,6 @@
 using UnityEngine;
-
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Animator))]
 public class Bullet : MonoBehaviour
 {
     [Header("Configuración")]
@@ -41,7 +42,7 @@ public class Bullet : MonoBehaviour
 
     private void DeactivateBullet()
     {
-        PoolManager.Instance.ReturnBullet(gameObject, isPlayerBullet);
+        GameManager.Instance.ReturnBullet(gameObject, isPlayerBullet);
     }
     #endregion
 }

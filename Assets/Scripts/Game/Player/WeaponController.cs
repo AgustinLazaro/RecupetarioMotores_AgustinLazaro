@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-
 public class WeaponController : MonoBehaviour
 {
     public static event Action OnEnemyHit;
@@ -53,7 +52,7 @@ public class WeaponController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             recoilTime = 1f;
-            GameObject bullet = PoolManager.Instance.GetPlayerBullet();
+            GameObject bullet = GameManager.Instance.GetPlayerBullet();
             bullet.transform.position = firePoint.position;
             bullet.transform.rotation = firePoint.rotation;
             RaycastHit hit;
