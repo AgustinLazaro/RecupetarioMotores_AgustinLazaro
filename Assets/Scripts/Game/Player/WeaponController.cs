@@ -1,21 +1,16 @@
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using UnityEngine;
 
 public class WeaponController : MonoBehaviour
 {
     public static event Action OnEnemyHit;
-
-    [Header("Object pool")]
-    [SerializeField] private int poolSize = 20;
-    private Queue<GameObject> bulletPool = new Queue<GameObject>();
 
     [Header("Estadísticas SO")]
     [SerializeField] private WeaponData weaponStats;
 
     [Header("Referencias Disparo")]
     [SerializeField] private Transform firePoint;
-    
+
     private float hitmarkerTimer = 0f;
 
     [Header("Coordenadas Aim")]
@@ -29,24 +24,16 @@ public class WeaponController : MonoBehaviour
     [Header("Variables Estado")]
     [SerializeField] private float recoilTime = 1f;
 
-    //pool
-    void Start()
-    {
-        //(inicio ; condición ; paso)
-        for (int i = 0; i <poolSize; i++)
-        {
-            GameObject obj = Instantiate(weaponStats.bulletPrefab);
-            obj.SetActive(false);
-            bulletPool.Enqueue(obj);
-        }
-    }
+    #region ciclo de vida
     void Update()
     {
         HandleAim();
         HandleShoot();
         HandleRecoil();
     }
-    //aim
+    #endregion
+
+    #region aim
     private void HandleAim()
     {
         if (Input.GetMouseButton(1))
@@ -58,23 +45,19 @@ public class WeaponController : MonoBehaviour
             transform.localPosition = Vector3.Lerp(transform.localPosition, position, Time.deltaTime * weaponStats.speedAim);
         }
     }
-    //shoot
+    #endregion
+
+    #region shoot
     private void HandleShoot()
     {
         if (Input.GetMouseButtonDown(0))
         {
             recoilTime = 1f;
-
-            GameObject bullet = bulletPool.Dequeue();
-
+            GameObject bullet = PoolManager.Instance.GetPlayerBullet();
             bullet.transform.position = firePoint.position;
             bullet.transform.rotation = firePoint.rotation;
-
-            bullet.SetActive(true);
-
-            bulletPool.Enqueue(bullet);
-
             RaycastHit hit;
+
             if (Physics.Raycast(firePoint.position, firePoint.forward, out hit, weaponStats.range))
             {
                 Debug.Log("Pegaste a esto: " + hit.transform.name);
@@ -87,18 +70,18 @@ public class WeaponController : MonoBehaviour
 
                 Debug.DrawRay(firePoint.position, firePoint.forward * hit.distance, Color.red, 2f);
                 OnEnemyHit?.Invoke();
-
             }
         }
     }
-    //recoil
+    #endregion
+
+    #region recoil
     private void HandleRecoil()
     {
         if (recoilTime > 0f)
         {
             Quaternion targetRetroceso = Quaternion.Euler(recoilRotation);
             transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRetroceso, Time.deltaTime * weaponStats.recoilSpeed);
-
             recoilTime -= Time.deltaTime * weaponStats.returnSpeed;
         }
         else
@@ -107,5 +90,5 @@ public class WeaponController : MonoBehaviour
             transform.localRotation = Quaternion.Slerp(transform.localRotation, targetNormal, Time.deltaTime * weaponStats.returnSpeed);
         }
     }
+    #endregion
 }
-

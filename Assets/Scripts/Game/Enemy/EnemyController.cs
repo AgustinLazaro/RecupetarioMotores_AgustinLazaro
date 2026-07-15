@@ -8,26 +8,31 @@ public class EnemyController : Character
     [SerializeField] private Transform enemyEyes;
     [SerializeField] private Transform enemyFirePoint;
     [SerializeField] private Image healthBarFill;
+    [SerializeField] private SphereCollider detectionCollider;
 
     [Header("Estados")]
     [SerializeField] private EnemyState currentState = EnemyState.Idle;
 
     [Header("Combate")]
-    [SerializeField] private float attackRange = 2f;
+    [SerializeField] private float detectionRange = 5f;
     [SerializeField] private float aimingTime = 1.5f;
     [SerializeField] private float attackCooldown = 1f;
 
+    [Header("Accion de Muerte")]
+    [SerializeField] private LeftArm leftArmScript;
+    [SerializeField] private float deathDelay = 2.0f;
+
     private float nextAttackTime;
     private float aimingTimer;
-
     #region ciclos de vida
     protected override void Start()
     {
         base.Start();
         InitHealth();
     }
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         HandleStateMachine();
     }
     private void OnTriggerStay(Collider other)
@@ -61,11 +66,12 @@ public class EnemyController : Character
     }
     private void StateIdle()
     {
+
     }
     private void StateTracking()
     {
         FaceTarget();
-        if (Vector3.Distance(transform.position, playerTarget.position) <= attackRange)
+        if (Vector3.Distance(transform.position, playerTarget.position) <= detectionRange)
         {
             currentState = EnemyState.Aiming;
             aimingTimer = 0f;
@@ -74,13 +80,12 @@ public class EnemyController : Character
     private void StateAiming()
     {
         FaceTarget();
-
-        
-        if (Vector3.Distance(transform.position, playerTarget.position) > attackRange)
+        if (Vector3.Distance(transform.position, playerTarget.position) > detectionRange)
         {
             currentState = EnemyState.Tracking;
             return;
         }
+
         aimingTimer += Time.deltaTime;
 
         if (aimingTimer >= aimingTime)
@@ -93,7 +98,7 @@ public class EnemyController : Character
     {
         FaceTarget();
 
-        if (Vector3.Distance(transform.position, playerTarget.position) > attackRange)
+        if (Vector3.Distance(transform.position, playerTarget.position) > detectionRange)
         {
             currentState = EnemyState.Tracking;
         }
@@ -110,15 +115,18 @@ public class EnemyController : Character
         if (Time.time >= nextAttackTime)
         {
             Vector3 shootDirection = (playerTarget.position - enemyFirePoint.position).normalized;
+            GameObject visualBullet = PoolManager.Instance.GetEnemyBullet();
+            visualBullet.transform.position = enemyFirePoint.position;
+            visualBullet.transform.rotation = Quaternion.LookRotation(shootDirection);
 
-            if (Physics.Raycast(enemyFirePoint.position, shootDirection, out RaycastHit hit, attackRange))
+            if (Physics.Raycast(enemyFirePoint.position, shootDirection, out RaycastHit hit, detectionRange))
             {
                 if (IsPlayer(hit.collider))
                 {
                     if (hit.collider.transform.root.TryGetComponent<Character>(out Character playerCharacter))
                     {
                         playerCharacter.TakeDamage(MyStats.damage);
-                        Debug.Log("¡El enemigo disparó y te sacó " + MyStats.damage + " de vida!");
+                        Debug.Log("enemy disparo y saco " + MyStats.damage + " de vida");
                     }
                 }
                 Debug.DrawRay(enemyFirePoint.position, shootDirection * hit.distance, Color.yellow, 0.5f);
@@ -192,11 +200,18 @@ public class EnemyController : Character
     public override void TakeDamage(float damageAmount)
     {
         base.TakeDamage(damageAmount);
-        UpdateHealthBar();
+        OnHealthChanged();
     }
     protected override void Die()
     {
-        Destroy(gameObject);
+        leftArmScript.ActivateAction();
+        GetComponent<Collider>().enabled = false;
+        Destroy(gameObject, deathDelay);
+    }
+    protected override void OnHealthChanged()
+    {
+        base.OnHealthChanged();
+        UpdateHealthBar();
     }
     private void UpdateHealthBar()
     {
