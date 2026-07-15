@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerController : Character
 {
-    [Header("Cosas únicas del Player")]
+    [Header("únicas de Player")]
     [SerializeField] private Transform cameraTransform;
 
     [Header("Ajustes de Cámara")]
@@ -80,7 +80,7 @@ public class PlayerController : Character
         float x = Input.GetAxis(AXIS_HORIZONTAL);
         float z = Input.GetAxis(AXIS_VERTICAL);
 
-        //Remplazo de variables de controles en vez hardcodeo de tecla 
+        //Remplazo variables de controles en vez hardcodeo de tecla 
         bool isSprinting = Input.GetKey(sprintKey);
 
         if (Input.GetKey(crouchKey))

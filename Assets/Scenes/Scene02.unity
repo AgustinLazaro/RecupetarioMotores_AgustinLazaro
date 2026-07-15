@@ -124,6 +124,25 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6114185901163825562, guid: a0eea3d70b8d4954a96073f0d2f5939b, type: 3}
   m_PrefabInstance: {fileID: 1591120785}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &62109000 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2159386709280590988, guid: a0eea3d70b8d4954a96073f0d2f5939b, type: 3}
+  m_PrefabInstance: {fileID: 1591120785}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &62109001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 62109000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 528ad7f9b89368b479e3a05dd644ba6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitmarkerUI
+  hitmarkerImage: {fileID: 656989008}
+  hitmarkerDuration: 0.5
 --- !u!1 &116507339
 GameObject:
   m_ObjectHideFlags: 0
@@ -2630,7 +2649,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6114185901163825562, guid: a0eea3d70b8d4954a96073f0d2f5939b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 378207102}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2159386709280590988, guid: a0eea3d70b8d4954a96073f0d2f5939b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 62109001}
   m_SourcePrefab: {fileID: 100100000, guid: a0eea3d70b8d4954a96073f0d2f5939b, type: 3}
 --- !u!1 &1821261396
 GameObject:
@@ -4440,8 +4462,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6092669279382925263}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.15266427, y: 0.041479684, z: -0.22010997, w: 0.96256155}
-  m_LocalPosition: {x: 0.004, y: 0.27, z: 0.02}
+  m_LocalRotation: {x: -0.15186599, y: 0.04715121, z: -0.19457284, w: 0.9679127}
+  m_LocalPosition: {x: -0.005, y: 0.29, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4452,7 +4474,7 @@ Transform:
   - {fileID: 4031547817859371103}
   - {fileID: 4816838468752639910}
   m_Father: {fileID: 9077042992691483195}
-  m_LocalEulerAnglesHint: {x: -16, y: 8.8, z: -27}
+  m_LocalEulerAnglesHint: {x: -16, y: 9, z: -24}
 --- !u!4 &2559285842414016570
 Transform:
   m_ObjectHideFlags: 0
@@ -6540,19 +6562,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0d24bc1583b7da4684535b42dadba95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponAim
+  poolSize: 20
+  weaponStats: {fileID: 11400000, guid: d1c22628a8e273246ab434b956d39711, type: 2}
   firePoint: {fileID: 1152305891}
-  range: 50
-  bulletPrefab: {fileID: 5740795210989267648, guid: 45915956821dfd945a5384675957b8b9, type: 3}
-  hitmarkerImage: {fileID: 656989008}
-  hitmarkerDuration: 0.5
-  position: {x: 0.004, y: 0.27, z: 0.02}
-  positionAim: {x: 0.006, y: 0.27, z: 0.11}
-  rotation: {x: -15.6, y: 9.7, z: -25.9}
-  recoilRotation: {x: -19, y: 13.5, z: -7}
-  speedAim: 8
-  returnSpeed: 15
-  recoilTime: 1
-  recoilSpeed: 20
+  position: {x: -0.005, y: 0.29, z: 0}
+  positionAim: {x: 0.023, y: 0.316, z: 0.104}
+  rotation: {x: -16, y: 9, z: -24}
+  recoilRotation: {x: -16, y: 9, z: -13}
+  recoilTime: 0
 --- !u!1 &6132523973915818491
 GameObject:
   m_ObjectHideFlags: 0
